@@ -11,3 +11,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.bookmark {
+  background-color: transparent !important;
+}
+
+.bookmark-active {
+  background-color: black !important;
+}
