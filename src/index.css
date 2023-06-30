@@ -14,8 +14,12 @@ code {
 
 .bookmark {
   background-color: transparent !important;
+  width: 25px !important;
+  height: 25px;
 }
 
 .bookmark-active {
   background-color: black !important;
+  width: 25px !important;
+  height: 25px;
 }
