@@ -8,10 +8,11 @@ const SearchStatus = ({users}) => {
   }
 
   return (
-    <h2><span 
-      className={"badge bg-" + (users.length > 0 ? 'primary' : 'danger')}
-    >
-      {users.length > 0 ? `${users.length} ${renderPhrase(users.length)} с тобой` : "Никто с тобой не тусанет"}
+    <h2>
+      <span 
+        className={"badge bg-" + (users > 0 ? 'primary' : 'danger')}
+      >
+      {users > 0 ? `${users} ${renderPhrase(users)} с тобой` : "Никто с тобой не тусанет"}
     </span></h2>
   )
 }
