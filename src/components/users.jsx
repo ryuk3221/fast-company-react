@@ -3,15 +3,24 @@ import api from '../API/index';
 import User from './User';
 import SearchStatus from './SearchStatus';
 import Pagination from './Pagination';
+import { paginate } from '../utils/paginate';
+import GroupList from './GroupList';
 
 const Users = () => {
   const [users, setUsers] = useState(api.users.fetchAll());
+  const [currentPage, setCurrentPage] = useState(1);
   const usersLength = users.length;
   const pageSize = 4;
+
   const handlePageChange = (pageIndex) => {
     console.log('Page : ', pageIndex);
+    setCurrentPage(pageIndex);
   }
 
+ 
+  const userCrop = paginate(users, currentPage, pageSize);
+
+  console.log(userCrop);
 
   const handleDeleteUser = (id) => {
     setUsers(users.filter( user => user._id !== id));
@@ -33,6 +42,7 @@ const Users = () => {
 
   return (
     <>
+    <GroupList items={}/>
     <SearchStatus users={users}/>
     {usersLength > 0 && (
     <table className="table">
@@ -48,8 +58,8 @@ const Users = () => {
         </tr>
       </thead>
       <tbody>
-        {users.map(user => (
-          <User {...user} handleDeleteUser={handleDeleteUser} onToggleBookMark={handleToggleBookMark}  />
+        {userCrop.map(user => (
+          <User {...user} handleDeleteUser={handleDeleteUser} onToggleBookMark={handleToggleBookMark} key={user._id} />
         ))}
       </tbody>
     </table>
@@ -58,6 +68,7 @@ const Users = () => {
       itemsCount = {usersLength}
       pageSize = {pageSize}
       onPageChange = {handlePageChange}
+      currentPage = {currentPage}
     />
     </>
   )
