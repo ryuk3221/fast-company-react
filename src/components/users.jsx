@@ -5,14 +5,18 @@ import SearchStatus from './SearchStatus';
 import Pagination from './Pagination';
 import { paginate } from '../utils/paginate';
 import GroupList from './GroupList';
+import UsersTable from './usersTable';
+import _ from 'lodash';
 
 const Users = () => {
   const [users, setUsers] = useState(api.users.fetchAll());
   const [currentPage, setCurrentPage] = useState(1);
   const [professions, setProfessions]  = useState();
   const [selectedProf, setSelectedProf] = useState();
+  const [sortBy, setSortBy] = useState({iter: "name", order: "asc"});
+
   
-  const pageSize = 4;
+  const pageSize = 8;
 
   useEffect(() => {
     const getProfs = async () => {
@@ -33,9 +37,12 @@ const Users = () => {
   }
 
   const filteredUsers = selectedProf ? users.filter(user => user.profession.name === selectedProf.name) : users;
+
   const usersLength = filteredUsers.length;
  
-  const userCrop = paginate(filteredUsers, currentPage, pageSize);
+  const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order]);
+
+  const userCrop = paginate(sortedUsers, currentPage, pageSize);
 
   
 
@@ -64,6 +71,10 @@ const Users = () => {
     setSelectedProf(undefined);
   }
 
+  const handleSort = (item) => {
+    setSortBy(item);
+  }
+
   return (
     <div className="users" style={{display: "flex"}}>
       <div className="users-left">
@@ -81,24 +92,13 @@ const Users = () => {
       </div>
       <div className="users-right">
         {usersLength > 0 && (
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">Имя</th>
-              <th scope="col">Качества</th>
-              <th scope="col">Проффесия</th>
-              <th scope="col">Встретился, раз</th>
-              <th scope="col">Оценка</th>
-              <th scope="col">Избранное</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {userCrop.map(user => (
-              <User {...user} handleDeleteUser={handleDeleteUser} onToggleBookMark={handleToggleBookMark} key={user._id} />
-            ))}
-          </tbody>
-        </table>
+          <UsersTable 
+            userCrop={userCrop} 
+            handleToggleBookMark={handleToggleBookMark} 
+            handleDeleteUser={handleDeleteUser} 
+            onSort={handleSort}
+            currentSort={sortBy}
+          />
         )}
         <Pagination 
           itemsCount = {usersLength}
